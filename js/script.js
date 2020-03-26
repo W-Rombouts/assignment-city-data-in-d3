@@ -1,37 +1,64 @@
-// this is your custom javascript code
-let ns = "http://www.w3.org/2000/svg"
 
+let svgContainer = d3.select("body").append("svg")
+  .attr("width", 720)
+  .attr("height", 360);
 
-let mijnsvg = document.createElementNS(ns,"svg");
-mijnsvg.setAttribute("id","mySvg");
-mijnsvg.setAttribute("width", "720");
-mijnsvg.setAttribute("height", "360");
+d3.select("body")
+.append('button')
+.text('Circle')
+.on('click',function () {
+    d3.selectAll("circle").remove()
+    d3.selectAll("rect").remove()
+    makeSymbols(true)
+});
+
+d3.select("body")
+.append('button')
+.text('Square')
+.on('click',function () {
+    d3.selectAll("rect").remove()
+    d3.selectAll("circle").remove()
+    makeSymbols(false)
+});
+
 
 function addCircle(cy,cx){
-    let circle = document. createElementNS(ns, "circle");
-    circle.setAttribute("cx", cx);
-    circle.setAttribute("cy", cy);
-    circle.setAttribute("r", 1);
-    circle.setAttribute("fill", "black");
-    return circle;
+  svgContainer.append("circle")
+  .attr("cx", cx)
+  .attr("cy", cy)
+  .attr("r", 0.5)
+  .style("fill", "orange");
+}
+
+function addSquare(cy,cx){
+  svgContainer.append("rect")
+  .attr("x", cx)
+  .attr("y", cy)
+  .attr("width", 3)
+  .attr("height", 3)
+  .style("fill", "red");
 }
 
 
 function coordToPos(value,longitude){
-    let position
-    if (longitude) {
-        position = (value + 180)*2;
-    }
-    else{
-        position = (90-value)*2;
-    }
+  let position
+  if (longitude) {
+      position = (value + 180)*2;
+  }
+  else{
+      position = (90-value)*2;
+  }
 
-    return position
+  return position
 }
 
-for (let i = 0; i < cities.length; i++) {
-    mijnsvg.appendChild(addCircle(coordToPos(cities[i].latitude,false),coordToPos(cities[i].longitude,true)))
-    
+function makeSymbols(isCircle) {
+    for (let i = 0; i < cities.length; i++) {
+        if (isCircle) {
+            addCircle(coordToPos(cities[i].latitude,false),coordToPos(cities[i].longitude,true));
+        }
+        else{
+            addSquare(coordToPos(cities[i].latitude,false),coordToPos(cities[i].longitude,true));
+        }
+      }
 }
-
-document.body.appendChild(mijnsvg)
